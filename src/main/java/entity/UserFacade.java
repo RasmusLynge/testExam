@@ -5,6 +5,7 @@ import javax.persistence.EntityManagerFactory;
 import exceptions.AuthenticationException;
 import java.util.ArrayList;
 import java.util.List;
+import utils.PuSelector;
 
 /**
  * @author lam@cphbusiness.dk

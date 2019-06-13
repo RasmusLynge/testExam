@@ -3,7 +3,7 @@ package rest;
 import com.google.gson.Gson;
 import entity.History;
 import entity.User;
-import fetch.ParallelPinger;
+import fetch.GetJson;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
@@ -43,46 +43,52 @@ public class DemoResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("availablecars/{week}/{address}")
-    public String allUsers(@PathParam("week") String week, @PathParam("address") String address) throws Exception {
+    public String getCars(@PathParam("week") String week, @PathParam("address") String address) throws Exception {
         EntityManager em = PuSelector.getEntityManagerFactory("pu").createEntityManager();
+        History history = new History("week:" + week + ",address:" + address);
+
         String result = "[";
-        result += GetJson.getJsonTwo("avis" ,week, address) + ", ";
-        result += GetJson.getJsonTwo("hertz" ,week, address) + ", ";
-        result += GetJson.getJsonTwo("europcar" ,week, address) + ", ";
-        result += GetJson.getJsonTwo("bugdet" ,week, address) + ", ";
-        result += GetJson.getJsonTwo("alamo" ,week, address) + "]";
-        History history = new History("week: "+week+",address:"+address);
-        
-        
-        
-        return result;
+        result += GetJson.getJsonTwo("avis", week, address) + ", ";
+        result += GetJson.getJsonTwo("hertz", week, address) + ", ";
+        result += GetJson.getJsonTwo("europcar", week, address) + ", ";
+        result += GetJson.getJsonTwo("bugdet", week, address) + ", ";
+        result += GetJson.getJsonTwo("alamo", week, address) + "]";
+        try {
+            em.getTransaction().begin();
+            em.persist(history);
+            return result;
+
+        } finally {
+            em.getTransaction().commit();
+            em.close();
+        }
+    }
+
+    //Just to verify if the database is setup
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("history")
+    @RolesAllowed("admin")
+    public String showHistory() throws Exception {
+        EntityManager em = PuSelector.getEntityManagerFactory("pu").createEntityManager();
+        List<History> histories = new ArrayList();
+        try {
+            histories = em.createQuery("select history from History history").getResultList();
+            return gson.toJson(histories);
+        } finally {
+            em.close();
+        }
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("user")
     @RolesAllowed("user")
-    public void getFromUser() throws Exception {
+    public String getFromUser() throws Exception {
         EntityManager em = PuSelector.getEntityManagerFactory("pu").createEntityManager();
         String thisUser = securityContext.getUserPrincipal().getName();
-//        try {
-//            wishes = em.createQuery("select wish from Wish wish where wish.user.userName = :userName ").setParameter("userName", thisUser).getResultList();
-//            //String wishList = "{\"name\": \"" + thisUser + "\", \"flightWish\":[";
-//            String jsonString = "{\"name\":\"" + thisUser + "\",\"flightWish\":[";
-//            for (int i = 0; i < wishes.size(); i++) {
-//                jsonString += ParallelPinger.getJsonFromAllServers(wishes.get(i).getWishID()) + ",";
-//            }
-//
-//            String outPut = jsonString.substring(0, jsonString.length() - 1);
-//            if (wishes.size() > 0) {
-//                return outPut + "]}";
-//            } else {
-//                return "{\"msg\":\"No flights\"}";
-//            }
-//
-//        } finally {
-//            em.close();
-//        }
+
+        return "{\"name\":\"" + thisUser + "\"}";
     }
 
     @POST

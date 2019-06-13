@@ -18,6 +18,16 @@ public class SetupTest {
         em.getTransaction().begin();
         History history = new History("test");
         em.persist(history);
+        Role userRole = new Role("user");
+        Role adminRole = new Role("admin");
+        User user = new User("user", "userpw");
+        user.addRole(userRole);
+        User admin = new User("admin", "adminpw");
+        admin.addRole(adminRole);
+        em.persist(userRole);
+        em.persist(adminRole);
+        em.persist(user);
+        em.persist(admin);
         em.getTransaction().commit();
 
     }

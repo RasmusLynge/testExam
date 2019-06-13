@@ -6,6 +6,8 @@
     <!-- Remember to add your Entity Classes below -->
     <class>entity.Car</class>
     <class>entity.History</class>
+    <class>entity.User</class>
+    <class>entity.Role</class>
     <properties>
       <!-- DONT ADD ANYTHING HERE
       This part will come from one of the pu_xxxx.properties files -->

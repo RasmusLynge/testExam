@@ -20,13 +20,13 @@ public class HistoryFacade {
         this.emf = emf;
     }
 
-    public History addCustomer(History customer) {
+    public History addHistory(History history) {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.persist(customer);
+            em.persist(history);
             em.getTransaction().commit();
-            return customer;
+            return history;
         } finally {
             em.close();
         }
