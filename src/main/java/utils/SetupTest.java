@@ -1,10 +1,11 @@
 package utils;
 
+import entity.History;
 import entity.Role;
 import entity.User;
 import javax.persistence.EntityManager;
 
-public class SetupTestUsers {
+public class SetupTest {
 
     public static void main(String[] args) {
 
@@ -15,21 +16,9 @@ public class SetupTestUsers {
         // CHANGE the three passwords below, before you uncomment and execute the code below
         //throw new UnsupportedOperationException("REMOVE THIS LINE, WHEN YOU HAVE READ WARNING");
         em.getTransaction().begin();
-        Role userRole = new Role("user");
-        Role adminRole = new Role("admin");
-        User user = new User("user", "userpw");
-        user.addRole(userRole);
-        User admin = new User("admin", "adminpw");
-        admin.addRole(adminRole);
-        em.persist(userRole);
-        em.persist(adminRole);
-        em.persist(user);
-        em.persist(admin);
+        History history = new History("test");
+        em.persist(history);
         em.getTransaction().commit();
-        System.out.println("PW: " + user.getUserPass());
-        System.out.println("Testing user with OK password: " + user.verifyPassword("test"));
-        System.out.println("Testing user with wrong password: " + user.verifyPassword("test1"));
-        System.out.println("Created TEST Users");
 
     }
 

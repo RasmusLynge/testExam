@@ -1,6 +1,7 @@
 package rest;
 
 import com.google.gson.Gson;
+import entity.History;
 import entity.User;
 import fetch.ParallelPinger;
 import java.util.ArrayList;
@@ -44,12 +45,16 @@ public class DemoResource {
     @Path("availablecars/{week}/{address}")
     public String allUsers(@PathParam("week") String week, @PathParam("address") String address) throws Exception {
         EntityManager em = PuSelector.getEntityManagerFactory("pu").createEntityManager();
-        String result = "";
-        result += GetJson.getJsonTwo("avis" ,week, address);
-        result += GetJson.getJsonTwo("hertz" ,week, address);
-        result += GetJson.getJsonTwo("europcar" ,week, address);
-        result += GetJson.getJsonTwo("bugdet" ,week, address);
-        result += GetJson.getJsonTwo("alamo" ,week, address);
+        String result = "[";
+        result += GetJson.getJsonTwo("avis" ,week, address) + ", ";
+        result += GetJson.getJsonTwo("hertz" ,week, address) + ", ";
+        result += GetJson.getJsonTwo("europcar" ,week, address) + ", ";
+        result += GetJson.getJsonTwo("bugdet" ,week, address) + ", ";
+        result += GetJson.getJsonTwo("alamo" ,week, address) + "]";
+        History history = new History("week: "+week+",address:"+address);
+        
+        
+        
         return result;
     }
 
