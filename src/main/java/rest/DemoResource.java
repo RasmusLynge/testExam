@@ -2,8 +2,7 @@ package rest;
 
 import com.google.gson.Gson;
 import entity.History;
-import entity.User;
-import fetch.GetJson;
+import fetch.ParallelPinger;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
@@ -47,16 +46,17 @@ public class DemoResource {
         EntityManager em = PuSelector.getEntityManagerFactory("pu").createEntityManager();
         History history = new History("week:" + week + ",address:" + address);
 
-        String result = "[";
-        result += GetJson.getJsonTwo("avis", week, address) + ", ";
-        result += GetJson.getJsonTwo("hertz", week, address) + ", ";
-        result += GetJson.getJsonTwo("europcar", week, address) + ", ";
-        result += GetJson.getJsonTwo("bugdet", week, address) + ", ";
-        result += GetJson.getJsonTwo("alamo", week, address) + "]";
+//        String result = "[";
+//        result += GetJson.getJsonTwo("avis", week, address) + ", ";
+//        result += GetJson.getJsonTwo("hertz", week, address) + ", ";
+//        result += GetJson.getJsonTwo("europcar", week, address) + ", ";
+//        result += GetJson.getJsonTwo("bugdet", week, address) + ", ";
+//        result += GetJson.getJsonTwo("alamo", week, address) + "]";
+        String result = ParallelPinger.getJsonFromAllServers(week, address);
         try {
             em.getTransaction().begin();
             em.persist(history);
-            return result;
+            return "["+result+"]";
 
         } finally {
             em.getTransaction().commit();
