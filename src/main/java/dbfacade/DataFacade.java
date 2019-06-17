@@ -62,15 +62,15 @@ public class DataFacade {
 
     public Owner getOwner(Owner owner) {
         try {
-            return (Owner) em.createQuery("select m from Owner m where id = :id").setParameter("id", owner.getId()).getSingleResult();
+            return (Owner) em.createQuery("select m from Owner m where m.id = :id").setParameter("id", owner.getId()).getSingleResult();
         } finally {
             em.close();
         }
     }
 
-    public Car getCar(Car car) {
+    public Car getCar(int id) {
         try {
-            return (Car) em.createQuery("select m from Car m where id = :id").setParameter("id", car.getId()).getSingleResult();
+            return (Car) em.createQuery("select m from Car m where m.id = :id").setParameter("id", id).getSingleResult();
         } finally {
             em.close();
         }
@@ -85,18 +85,21 @@ public class DataFacade {
         }
     }
 
-    public void deleteCar(Car car) {
-        Car carToDelete = getCar(car);
+    public void deleteCar(int id) {
+        Car carToDelete = (Car) em.createQuery("select m from Car m where m.id = :id").setParameter("id", id).getSingleResult();
+        System.out.println(carToDelete.getId());
         try {
+            em.getTransaction().begin();
             em.remove(carToDelete);
+            em.getTransaction().commit();
         } finally {
             em.close();
         }
     }
-    
-        public List<OwnerDTO> getAllPetDTO() {
+
+    public List<OwnerDTO> getAllOwnerDTO() {
         try {
-            Query q = em.createQuery("SELECT NEW dto.OwnerDTO(p.id, p., p.birth, p.species, o.firstName, o.lastName) FROM Car p, Owner o WHERE p.owner.id = o.id");
+            Query q = em.createQuery("SELECT NEW DTO.OwnerDTO(p.id, p.firstName, p.lastName, p.club, o.brand, o.color) FROM Owner p, Car o WHERE p.id = o.owner.id");
             return (List<OwnerDTO>) q.getResultList();
         } finally {
             em.close();
@@ -105,8 +108,8 @@ public class DataFacade {
 
     public static void main(String[] args) {
         DataFacade cf = new DataFacade();
-        cf.addCar(new Car("test", "test", 2000, "test"));
+        //cf.addCar(new Car("test", "test", 2000, "test"));
         //System.out.println(cf.getAllCars());
-
+        cf.getAllOwnerDTO();
     }
 }

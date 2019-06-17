@@ -20,21 +20,42 @@ public class OwnerDTO {
     private String lastName;
     private String club;
     private String carBrand;
+    private String carColor;
 
     public OwnerDTO(Owner owner, Car car) {
         this.id = owner.getId();
         this.firstName = owner.getFirstName();
         this.lastName = owner.getLastName();
+        this.club = owner.getClub();
         this.carBrand = car.getBrand();
-
+        this.carColor = car.getColor();
     }
 
-    public OwnerDTO(Integer id, String firstName, String lastName, String club) {
-        this.id = id;
+    public OwnerDTO(String firstName, String lastName, String club, String carBrand, String carColor) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.club = club;
+        this.carBrand = carBrand;
+        this.carColor = carColor;
     }
+
+    public String getCarBrand() {
+        return carBrand;
+    }
+
+    public void setCarBrand(String carBrand) {
+        this.carBrand = carBrand;
+    }
+
+    public String getCarColor() {
+        return carColor;
+    }
+
+    public void setCarColor(String carColor) {
+        this.carColor = carColor;
+    }
+
+
 
     public Integer getId() {
         return id;

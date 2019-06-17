@@ -6,6 +6,7 @@ import dbfacade.DataFacade;
 import entity.Car;
 import entity.Owner;
 import fetch.ParallelPinger;
+import static java.awt.event.PaintEvent.UPDATE;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
@@ -23,7 +24,7 @@ import javax.ws.rs.core.SecurityContext;
 import utils.PuSelector;
 
 /**
- * @author lam@cphbusiness.dk
+ * @author Representational State Transfer
  */
 @Path("info")
 public class DemoResource {
@@ -47,12 +48,55 @@ public class DemoResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("getall")
-    public String getCars(@PathParam("week") String week, @PathParam("address") String address) throws Exception {
+    public String getCars() throws Exception {
         //List<Owner> owners = df.getAllOwners();
-        List<Car> cars = df.getAllCars();
-        return cars.toString();
+        List<OwnerDTO> owner = df.getAllOwnerDTO();
+        return owner.toString();
     }
-
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("getCar/{id}")
+    public String getCar(@PathParam("id") int id) throws Exception {
+        Car car = df.getCar(id);
+        return gson.toJson(car);
+    }
+    
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("deleteCar/{id}")
+    public void getCars(@PathParam("id") int id) throws Exception {
+        df.deleteCar(id);
+        System.out.println("DELETE");
+    }
+    
+//    @UPDATE
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Path("updateCar/{id}")
+//    public void updateCar(@PathParam("id") int id) throws Exception {
+//        System.out.println("UPDATE");
+//    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     //Just to verify if the database is setup
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -62,7 +106,7 @@ public class DemoResource {
         EntityManager em = PuSelector.getEntityManagerFactory("pu").createEntityManager();
 //        List<History> histories = new ArrayList();
         try {
- //           histories = em.createQuery("select history from History history").getResultList();
+            //           histories = em.createQuery("select history from History history").getResultList();
             return gson.toJson("hej");
         } finally {
             em.close();
