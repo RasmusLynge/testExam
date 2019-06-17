@@ -1,7 +1,10 @@
 package rest;
 
+import DTO.OwnerDTO;
 import com.google.gson.Gson;
-import entity.History;
+import dbfacade.DataFacade;
+import entity.Car;
+import entity.Owner;
 import fetch.ParallelPinger;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,8 @@ import utils.PuSelector;
 @Path("info")
 public class DemoResource {
 
+    DataFacade df = new DataFacade();
+
     Gson gson = new Gson();
     @Context
     private UriInfo context;
@@ -41,27 +46,11 @@ public class DemoResource {
     //Just to verify if the database is setup
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("availablecars/{week}/{address}")
+    @Path("getall")
     public String getCars(@PathParam("week") String week, @PathParam("address") String address) throws Exception {
-        EntityManager em = PuSelector.getEntityManagerFactory("pu").createEntityManager();
-        History history = new History("week:" + week + ",address:" + address);
-
-//        String result = "[";
-//        result += GetJson.getJsonTwo("avis", week, address) + ", ";
-//        result += GetJson.getJsonTwo("hertz", week, address) + ", ";
-//        result += GetJson.getJsonTwo("europcar", week, address) + ", ";
-//        result += GetJson.getJsonTwo("bugdet", week, address) + ", ";
-//        result += GetJson.getJsonTwo("alamo", week, address) + "]";
-        String result = ParallelPinger.getJsonFromAllServers(week, address);
-        try {
-            em.getTransaction().begin();
-            em.persist(history);
-            return "["+result+"]";
-
-        } finally {
-            em.getTransaction().commit();
-            em.close();
-        }
+        //List<Owner> owners = df.getAllOwners();
+        List<Car> cars = df.getAllCars();
+        return cars.toString();
     }
 
     //Just to verify if the database is setup
@@ -71,10 +60,10 @@ public class DemoResource {
     @RolesAllowed("admin")
     public String showHistory() throws Exception {
         EntityManager em = PuSelector.getEntityManagerFactory("pu").createEntityManager();
-        List<History> histories = new ArrayList();
+//        List<History> histories = new ArrayList();
         try {
-            histories = em.createQuery("select history from History history").getResultList();
-            return gson.toJson(histories);
+ //           histories = em.createQuery("select history from History history").getResultList();
+            return gson.toJson("hej");
         } finally {
             em.close();
         }
