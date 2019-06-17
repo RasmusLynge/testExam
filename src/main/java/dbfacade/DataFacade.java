@@ -1,11 +1,13 @@
 package dbfacade;
 
+import DTO.OwnerDTO;
 import entity.Car;
 import entity.Owner;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import utils.PuSelector;
 
 /**
@@ -87,6 +89,15 @@ public class DataFacade {
         Car carToDelete = getCar(car);
         try {
             em.remove(carToDelete);
+        } finally {
+            em.close();
+        }
+    }
+    
+        public List<OwnerDTO> getAllPetDTO() {
+        try {
+            Query q = em.createQuery("SELECT NEW dto.OwnerDTO(p.id, p., p.birth, p.species, o.firstName, o.lastName) FROM Car p, Owner o WHERE p.owner.id = o.id");
+            return (List<OwnerDTO>) q.getResultList();
         } finally {
             em.close();
         }
